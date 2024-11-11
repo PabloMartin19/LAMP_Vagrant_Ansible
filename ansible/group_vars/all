@@ -1,0 +1,20 @@
+router_ip: 192.168.121.221
+web_ip: 192.168.121.53
+bd_ip: 192.168.121.8
+san_ip: 192.168.121.103
+cliente_ip: 192.168.121.32
+ip_interna_local: 10.0.0.0
+ip_interna_router: 10.0.0.10
+ip_interna_web: 10.0.0.20
+ip_interna_bd: 10.0.0.30
+ip_reddatos_web: 20.0.0.20
+ip_reddatos_bd: 20.0.0.30
+mascara_larga: 255.255.255.0
+ip_interna_san: 10.0.0.40
+gateway_internet_router: 172.22.0.1
+
+# Variables para WordPress
+wp_db_name: wordpress
+wp_db_user: wpuser
+wp_db_password: wppassword
+wp_db_host: bd.pablo.com

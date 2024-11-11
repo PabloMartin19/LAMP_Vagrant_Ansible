@@ -1,0 +1,30 @@
+- hosts: web, bd, san, cliente
+  become: true
+  roles:
+    - role: redinterna
+
+- hosts: router
+  become: true
+  roles:
+    - role: router
+
+- hosts: all
+  become: true
+  roles:
+    - role: common
+
+- hosts: web
+  become: true
+  roles:
+    - role: web
+    - role: wordpress
+  vars:
+    wp_db_name: wordpress
+    wp_db_user: wpuser
+    wp_db_password: wppassword
+    wp_db_host: bd.pablo.com
+
+- hosts: bd
+  become: true
+  roles:
+    - role: bd

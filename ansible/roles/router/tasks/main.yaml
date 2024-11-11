@@ -1,0 +1,65 @@
+- name: Eliminar ruta por defecto existente
+  lineinfile:
+    path: /etc/network/interfaces
+    regexp: '^\s*post-up ip route add default.*'
+    state: absent
+
+- name: Añadir nueva ruta por defecto
+  lineinfile:
+    path: /etc/network/interfaces
+    insertafter: '^\s*post-up ip route del default.*'
+    line: '    post-up ip route add default via {{gateway_internet_router}} dev eth1'
+    state: present
+
+- name: Reiniciar networking
+  systemd:
+    name: networking
+    state: restarted
+
+- name: Cambia el bit de forward a 1
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: Limpiar reglas de iptables existentes
+  iptables:
+    flush: yes
+    table: "{{ item }}"
+  loop:
+    - filter
+    - nat
+    - mangle
+  become: yes
+
+- name: Configurar DNAT para el servidor web
+  iptables:
+    table: nat
+    chain: PREROUTING
+    in_interface: eth1
+    protocol: tcp
+    destination_port: 80
+    jump: DNAT
+    to_destination: 10.0.0.20:80
+  become: yes
+
+- name: Configurar SNAT para la red interna
+  iptables:
+    table: nat
+    chain: POSTROUTING
+    out_interface: eth1
+    source: 10.0.0.0/24
+    jump: MASQUERADE
+  become: yes
+
+- name: Instalar iptables-persistent
+  apt:
+    name: iptables-persistent
+    state: present
+  become: yes
+
+- name: Guardar reglas de iptables
+  shell: iptables-save > /etc/iptables/rules.v4
+  become: yes
