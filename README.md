@@ -2,7 +2,7 @@
 
 ## Práctica (1 / 3): Creación y configuración de un servidor LAMP
 
-[ImagenLAMP](/home/pavlo/vagrant/LAMP.png)
+[ImagenLAMP](LAMP.png)
 
 ### Vagrant
 ---
